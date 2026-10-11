@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Мой первый кликер</title>
+
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            color: white;
+            background: #17172b;
+        }
+
+        .game {
+            width: 320px;
+            padding: 25px;
+            text-align: center;
+            background: #292944;
+            border-radius: 20px;
+        }
+
+        h1 {
+            font-size: 26px;
+        }
+
+        #coins {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 25px 0;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #clickButton {
+            background: #ffd54f;
+        }
+
+        #upgradeButton {
+            background: #83e8bd;
+        }
+
+        button:active {
+            transform: scale(0.97);
+        }
+
+        #info {
+            color: #d0d0e8;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="game">
+        <h1>💰 Мой первый кликер</h1>
+
+        <div id="coins">Монеты: 0</div>
+
+        <button id="clickButton">
+            Нажми и заработай!
+        </button>
+
+        <button id="upgradeButton">
+            Улучшение: 25 монет
+        </button>
+
+        <p id="info">За клик: 1 монета</p>
+    </div>
+
+    <script>
+        let coins = Number(localStorage.getItem("coins")) || 0;
+        let power = Number(localStorage.getItem("power")) || 1;
+        let upgradeCost = 25 * power;
+
+        const coinsText = document.getElementById("coins");
+        const infoText = document.getElementById("info");
+        const clickButton = document.getElementById("clickButton");
+        const upgradeButton = document.getElementById("upgradeButton");
+
+        function saveGame() {
+            localStorage.setItem("coins", coins);
+            localStorage.setItem("power", power);
+        }
+
+        function updateScreen() {
+            coinsText.textContent = "Монеты: " + coins;
+            infoText.textContent = "За клик: " + power + " монет";
+            upgradeButton.textContent =
+                "Улучшение: " + upgradeCost + " монет";
+        }
+
+        clickButton.addEventListener("click", function() {
+            coins += power;
+            saveGame();
+            updateScreen();
+        });
+
+        upgradeButton.addEventListener("click", function() {
+            if (coins >= upgradeCost) {
+                coins -= upgradeCost;
+                power++;
+                upgradeCost = 25 * power;
+
+                saveGame();
+                updateScreen();
+            } else {
+                infoText.textContent =
+                    "Не хватает монет! Продолжай нажимать.";
+            }
+        });
+
+        updateScreen();
+    </script>
+</body>
+</html>
